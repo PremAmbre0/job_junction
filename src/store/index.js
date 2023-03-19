@@ -65,6 +65,7 @@ export default new Vuex.Store({
     snackbarText: (state) => state.snackbarText,
     snackbarTime: (state) => state.snackbarTime,
     snackbarColor: (state) => state.snackbarColor,
+    showOverlayLoader: (state) => state.showOverlayLoader,
   },
   mutations: {
     openLoaderDialog(state) {
@@ -120,7 +121,8 @@ export default new Vuex.Store({
         commit("closeOverlayLoader");
       });
     },
-    getAuth: async ({ commit, dispatch }, payload) => {
+    
+    login: async ({ commit, dispatch }, payload) => {
       let { username, password } = payload;
       let fail = (msg) => commit("failure", msg);
       return dispatch("apiCall", {
@@ -146,6 +148,100 @@ export default new Vuex.Store({
             { root: true }
           );
           fail(err.toString() || "Failed to Login");
+          return {
+            ok: false,
+            message: err.message,
+          };
+        });
+    },
+    signup: async ({ commit, dispatch }, payload) => {
+      let { username, password } = payload;
+      let fail = (msg) => commit("failure", msg);
+      return dispatch("apiCall", {
+        method: "post",
+        url: api.REGISTER,
+        data: { username, password },
+      })
+        .then((data) => {
+          commit("openSnackbar", {
+            text: "Sign Up Successfully!",
+            type: "success",
+          });
+          return data;
+        })
+        .catch((err) => {
+          console.error("Err:", err);
+          commit(
+            "openSnackbar",
+            {
+              text: "Failed to Sign Up, try again!",
+              type: "error",
+            },
+            { root: true }
+          );
+          fail(err.toString() || "Failed to Sign Up");
+          return {
+            ok: false,
+            message: err.message,
+          };
+        });
+    },
+    addJob: async ({ commit, dispatch }, payload) => {
+      let fail = (msg) => commit("failure", msg);
+      return dispatch("apiCall", {
+        method: "post",
+        url: api.ADD_JOB,
+        data: payload,
+      })
+        .then((data) => {
+          commit("openSnackbar", {
+            text: "Job Added Successfully!",
+            type: "success",
+          });
+          return data;
+        })
+        .catch((err) => {
+          console.error("Err:", err);
+          commit(
+            "openSnackbar",
+            {
+              text: "Failed to post job, try again!",
+              type: "error",
+            },
+            { root: true }
+          );
+          fail(err.toString() || "Failed to post job");
+          return {
+            ok: false,
+            message: err.message,
+          };
+        });
+    },
+    addCandidate: async ({ commit, dispatch }, payload) => {
+      let fail = (msg) => commit("failure", msg);
+      return dispatch("apiCall", {
+        method: "post",
+        url: api.ADD_CANDIDATE,
+        data: payload,
+      })
+        .then((data) => {
+          commit("openSnackbar", {
+            text: "Candidate Added Successfully!",
+            type: "success",
+          });
+          return data;
+        })
+        .catch((err) => {
+          console.error("Err:", err);
+          commit(
+            "openSnackbar",
+            {
+              text: "Failed to post Candidate, try again!",
+              type: "error",
+            },
+            { root: true }
+          );
+          fail(err.toString() || "Failed to post Candidate");
           return {
             ok: false,
             message: err.message,

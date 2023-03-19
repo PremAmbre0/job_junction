@@ -25,14 +25,22 @@
           <v-text-field
             v-model="password"
             outlined
+            type="password"
             label="password"
             placeholder="password"
             clearable
             color="#5243AA"
           ></v-text-field>
           <div class="login-btn-container">
-            <v-btn class="login-btn" block large elevation="0" color="#5243AA" @click="login">
-              Login
+            <v-btn
+              class="login-btn"
+              block
+              large
+              elevation="0"
+              color="#5243AA"
+              @click="register"
+            >
+              {{ !isRegistered ? "Sign In" : "Log In" }}
             </v-btn>
           </div>
           <div class="already-a-member">
@@ -58,12 +66,27 @@ export default {
     isRegistered: false,
   }),
   methods: {
-    ...mapActions(["getAuth"]),
-    login() {
-      this.getAuth({
-        username: this.username,
-        password: this.password,
-      });
+    ...mapActions(["login", "signup"]),
+    register() {
+      if (!this.isRegistered) {
+        this.signup({
+          username: this.username,
+          password: this.password,
+        }).then((res) => {
+          if (res.ok) {
+            this.$router.push("/home");
+          }
+        });
+      } else {
+        this.login({
+          username: this.username,
+          password: this.password,
+        }).then((res) => {
+          if (res.ok) {
+            this.$router.push("/home");
+          }
+        });
+      }
     },
   },
 };

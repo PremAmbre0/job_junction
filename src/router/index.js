@@ -1,28 +1,34 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import LoginAndSignup from '@/views/LogInAndSignUp.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'loginAndSignup',
-    component: LoginAndSignup
+    path: "/",
+    name: "loginAndSignup",
+    component: () => import("@/views/LogInAndSignUp.vue"),
+  },
+  {
+    path: "/home",
+    name: "HomePage",
+    component: () => import("@/views/HomePage.vue"),
   },
 
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  // }
-]
+  {
+    path: "/uploadResume",
+    name: "uploadResume",
+    component: () => import("@/views/uploadResume.vue"),
+  },
+  {
+    path: "/recruiterForm",
+    name: "recruiterForm",
+    component: () => import("@/views/RecruitersForm.vue"),
+  },
+];
 
 const router = new VueRouter({
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
